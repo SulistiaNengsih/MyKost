@@ -25,7 +25,7 @@
                 </li>
               @endif
               <li class = "dropdown-item"><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#tambahKategori">Tambah Kategori</a></li>
-              <li class = "dropdown-item"><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editKategori">Kelola Kategori</a></li>
+              <li class = "dropdown-item"><a class="dropdown-item" href="{{url('/kelola-kategori')}}">Kelola Kategori</a></li>
               <hr>
               @foreach ($kategoriPengeluaran as $kp)
               <li class = "dropdown-item">
@@ -125,7 +125,7 @@
   modalInput.value = id
   })
 
-  // Modal Edit
+  // Modal Edit Data
   const editModal = document.getElementById('edit')
   editModal.addEventListener('show.bs.modal', event => {
 

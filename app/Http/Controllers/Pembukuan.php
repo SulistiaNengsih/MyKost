@@ -105,13 +105,19 @@ class Pembukuan extends Controller
     public function addKategori(Request $request) {
         $tabel = 'kategori_'.$request->jenis;
         $kolom = 'jenis_'.$request->jenis;
-        $returnUrl = '/pembukuan-'.$request->jenis;
 
         DB::table($tabel)->insert([
             $kolom => $request->namaKategori
         ]);
 
         return back();
+    }
+
+    public function kelolaKategori() {
+        return view('kelolaKategori', [
+            'kategoriPengeluaran' => KategoriPengeluaran::get(),
+            'kategoriPemasukan' => KategoriPemasukan::get()
+        ]);
     }
         
     public function updateData(Request $request) {
