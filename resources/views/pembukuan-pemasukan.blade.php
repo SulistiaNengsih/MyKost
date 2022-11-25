@@ -29,7 +29,7 @@
               <hr>
               @foreach ($kategoriPemasukan as $kp)
               <li class = "dropdown-item">
-                <a class = "dropdown-item" href="{{url('/pembukuan-pengeluaran?filter='.$kp->jenis_pemasukan)}}">{{$kp->jenis_pemasukan}}</a>
+                <a class = "dropdown-item" href="{{url('/pembukuan-pemasukan?filter='.$kp->jenis_pemasukan)}}">{{$kp->jenis_pemasukan}}</a>
               </li>
               @endforeach
             </ul>
