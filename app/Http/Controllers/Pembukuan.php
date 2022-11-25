@@ -119,6 +119,34 @@ class Pembukuan extends Controller
             'kategoriPemasukan' => KategoriPemasukan::get()
         ]);
     }
+
+    public function updateKategori(Request $request) {
+        if ($request->jenisUpdate === "Pengeluaran") {
+            DB::table('kategori_pengeluaran')
+            ->where('id', $request->idUpdate)
+            ->update([
+                'jenis_pengeluaran' => $request->nama
+            ]);
+
+        } else {
+            DB::table('kategori_pemasukan')
+            ->where('id', $request->idUpdate)
+            ->update([
+                'jenis_pemasukan' => $request->nama
+            ]);
+        }
+        return back();
+    }
+
+    public function deleteKategori(Request $request) {
+        if ($request->jenis === "Pengeluaran") {
+            KategoriPengeluaran::where('id', '=', $request->id)->delete();
+        } else {
+            KategoriPemasukan::where('id', '=', $request->id)->delete();
+        }
+
+        return back();
+    }
         
     public function updateData(Request $request) {
         if ($request->jenisUpdate === 'Pengeluaran') {
@@ -134,7 +162,6 @@ class Pembukuan extends Controller
                 'nominal' => $request->nominal
             ]);
 
-            // return redirect('/pembukuan-pengeluaran');
         } else {
             $pos = strpos($request->jenis, '-');
             $kategori = substr($request->jenis, 0, $pos);
@@ -147,8 +174,6 @@ class Pembukuan extends Controller
                 'tanggal' => $request->tanggal,
                 'nominal' => $request->nominal
             ]);
-
-            // return redirect('/pembukuan-pemasukan');
         }
         return back();
     }

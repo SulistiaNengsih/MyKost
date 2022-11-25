@@ -34,7 +34,6 @@
               @endforeach
             </ul>
           </div>
-
         </div>
       </div>
 
@@ -85,7 +84,7 @@
                 <td scope="col">{{$p->tanggal}}</td>
                 <td scope="col">{{formatRupiah($p->nominal)}}</td>
                 <td scope="col">
-                  <a data-bs-toggle="modal" data-bs-target="#edit" idEdit="{{$p->id}}" nominal="{{$p->nominal}}" tanggal="{{$p->tanggal}}" ket="{{$p->ket_pengeluaran}}" idKategori="{{$p->id_kategori_pengeluaran}}" kategori="{{$p->jenis_pengeluaran}}"  id="editBtn">
+                  <a type="button" data-bs-toggle="modal" data-bs-target="#edit" idEdit="{{$p->id}}" nominal="{{$p->nominal}}" tanggal="{{$p->tanggal}}" ket="{{$p->ket_pengeluaran}}" idKategori="{{$p->id_kategori_pengeluaran}}" kategori="{{$p->jenis_pengeluaran}}"  id="editBtn">
                     <i data-feather="edit" class="text-primary"></i>
                   </a>
                 </td>
@@ -108,7 +107,7 @@
 </div>
 
 <x-modal.tambah jenis="Pengeluaran" />
-<x-modal.hapus jenis="pengeluaran" />
+<x-modal.hapus jenis="pengeluaran" url="/delete-data" />
 <x-modal.update jenis="Pengeluaran" : kategori="{{DB::table('kategori_pengeluaran')->get()}}" />
 <x-modal.tambah-kategori />
 

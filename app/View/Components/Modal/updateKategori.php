@@ -4,19 +4,17 @@ namespace App\View\Components\Modal;
 
 use Illuminate\View\Component;
 
-class Hapus extends Component
+class updateKategori extends Component
 {
     public $jenis;
-    public $url;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($jenis, $url)
+    public function __construct($jenis)
     {
         $this->jenis = $jenis;
-        $this->url = $url;
     }
 
     /**
@@ -26,6 +24,6 @@ class Hapus extends Component
      */
     public function render()
     {
-        return view('components.modal.hapus');
+        return view('components.modal.update-kategori');
     }
 }

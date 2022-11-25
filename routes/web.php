@@ -39,5 +39,9 @@ Route::post('/add-kategori', [Pembukuan::class, 'addKategori']);
 
 Route::get('/kelola-kategori', [Pembukuan::class, 'kelolaKategori']);
 
+Route::post('/delete-kategori', [Pembukuan::class, 'deleteKategori']);
+
+Route::post('/update-kategori', [Pembukuan::class, 'updateKategori']);
+
 
 

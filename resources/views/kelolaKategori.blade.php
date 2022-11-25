@@ -23,6 +23,7 @@
 
     {{-- Tabel Pengeluaran --}}
     <h4 class="h4">Kategori Pengeluaran</h4>
+    <hr>
     <div class="table-responsive">
         <table class="table table-striped table-sm">
           <thead>
@@ -44,12 +45,12 @@
                 <td scope="col">{{$kp->id}}</td>
                 <td scope="col">{{$kp->jenis_pengeluaran}}</td>
                 <td scope="col">
-                  <a data-bs-toggle="modal" data-bs-target="#editKategori" idEdit="{{$kp->id}}" jenis="{{$kp->jenis_pengeluaran}}" id="editBtn">
+                  <a type="button" data-bs-toggle="modal" data-bs-target="#editKategori" idEdit="{{$kp->id}}" jenisEdit="Pengeluaran" namaEdit="{{$kp->jenis_pengeluaran}}" id="editBtn">
                     <i data-feather="edit" class="text-primary"></i>
                   </a>
                 </td>
                 <td scope="col">
-                  <a data-bs-toggle="modal" data-bs-target="#hapusKategori" data-bs-idHapus="{{$kp->id}}" style="color: red;" type="button" id="hapusBtn">
+                  <a data-bs-toggle="modal" data-bs-target="#hapus" idHapus="{{$kp->id}}" jenis="Pengeluaran" style="color: red;" type="button" id="hapusBtn">
                     <i data-feather="trash-2" class="text-danger"></i>
                   </a>
                 </td> 
@@ -62,10 +63,9 @@
         </table>
       </div>
 
-      <hr>
-
       {{-- Tabel Pemasukan --}}
       <h4 class="h4">Kategori Pemasukan</h4>
+      <hr>
       <div class="table-responsive">
         <table class="table table-striped table-sm">
           <thead>
@@ -87,12 +87,12 @@
                 <td scope="col">{{$kp->id}}</td>
                 <td scope="col">{{$kp->jenis_pemasukan}}</td>
                 <td scope="col">
-                  <a data-bs-toggle="modal" data-bs-target="#editKategori" idEdit="{{$kp->id}}" jenis="{{$kp->jenis_pemasukan}}" id="editBtn">
+                  <a type="button" data-bs-toggle="modal" data-bs-target="#editKategori2" idEdit="{{$kp->id}}" jenisEdit="Pemasukan" namaEdit="{{$kp->jenis_pemasukan}}" id="editBtn">
                     <i data-feather="edit" class="text-primary"></i>
                   </a>
                 </td>
                 <td scope="col">
-                  <a data-bs-toggle="modal" data-bs-target="#hapusKategori" data-bs-idHapus="{{$kp->id}}" style="color: red;" type="button" id="hapusBtn">
+                  <a data-bs-toggle="modal" data-bs-target="#hapus" idHapus="{{$kp->id}}" jenis="Pemasukan" style="color: red;" type="button" id="hapusBtn">
                     <i data-feather="trash-2" class="text-danger"></i>
                   </a>
                 </td> 
@@ -109,7 +109,68 @@
 </div>
   </main>
 
-  {{-- Modal Tambah Kategori --}}
+  {{-- Modal --}}
   <x-modal.tambah-kategori />
+  <x-modal.hapus jenis="" : url="/delete-kategori" />
+  <x-modal.update-kategori jenis="Pengeluaran" />
+  <x-modal.update-kategori-pemasukan />
 
+  <script>
+    // Modal Hapus
+    const hapusModal = document.getElementById('hapus')
+    hapusModal.addEventListener('show.bs.modal', event => {
+  
+    const button = event.relatedTarget
+    const id = button.getAttribute('idHapus')
+    const jenis = button.getAttribute('jenis')
+  
+    const modalId = hapusModal.querySelector('.id')
+    const modalJenis = hapusModal.querySelector('.jenis')
+  
+    modalId.value = id
+    modalJenis.value = jenis
+    })
+  </script>
+
+  <script>
+    // Modal Edit Pengeluaran
+    const editModal = document.getElementById('editKategori')
+    editModal.addEventListener('show.bs.modal', event => {
+  
+    const buttonEdit = event.relatedTarget
+    const idEdit = buttonEdit.getAttribute('idEdit')
+    const jenisEdit = buttonEdit.getAttribute('jenisEdit')
+    const namaEdit = buttonEdit.getAttribute('namaEdit')
+  
+    const modalIdEdit = editModal.querySelector('.idUpdate')
+    const modalJenisEdit = editModal.querySelector('.jenisUpdate')
+    const modalNamaEdit = editModal.querySelector('.nama')
+  
+    modalIdEdit.value = idEdit
+    modalJenisEdit.value = jenisEdit
+    modalNamaEdit.value = namaEdit
+    })
+  </script>
+
+<script>
+  // Modal Edit Pemasukan
+  const editPemasukan = document.getElementById('editKategori2')
+  editPemasukan.addEventListener('show.bs.modal', event => {
+
+  const buttonEdit = event.relatedTarget
+  const idEdit = buttonEdit.getAttribute('idEdit')
+  const jenisEdit = buttonEdit.getAttribute('jenisEdit')
+  const namaEdit = buttonEdit.getAttribute('namaEdit')
+
+  const modalIdEdit = editPemasukan.querySelector('.idUpdate')
+  const modalJenisEdit = editPemasukan.querySelector('.jenisUpdate')
+  const modalNamaEdit = editPemasukan.querySelector('.nama')
+
+  modalIdEdit.value = idEdit
+  modalJenisEdit.value = jenisEdit
+  modalNamaEdit.value = namaEdit
+  })
+</script>
+
+    
 <x-footer />

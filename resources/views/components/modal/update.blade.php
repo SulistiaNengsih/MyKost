@@ -13,13 +13,24 @@
                   <label for="jenis" class="form-label">Kategori {{$jenis}}</label>
                   <select class="form-select" id="jenis" name="jenis" value="" required>
                     <option>Pilih kategori {{$jenis}}...</option>
-                    @foreach (DB::table('kategori_pengeluaran')->get() as $kp)
+                    @if ($jenis === 'Pengeluaran')
+                      @foreach (DB::table('kategori_pengeluaran')->get() as $kp)
+                        <option>{{$kp->id}}-{{$kp->jenis_pengeluaran}}</option>
+                      @endforeach
+                    @else
+                      @foreach (DB::table('kategori_pemasukan')->get() as $kp)
+                        <option>{{$kp->id}}-{{$kp->jenis_pemasukan}}</option>
+                      @endforeach
+                    @endif
+
+                    {{-- @foreach (DB::table('kategori_pengeluaran')->get() as $kp)
                         @if ($jenis === 'Pengeluaran')
                             <option>{{$kp->id}}-{{$kp->jenis_pengeluaran}}</option>
                         @else 
                             <option>{{$kp->id}}-{{$kp->jenis_pemasukan}}</option>
                         @endif
-                    @endforeach
+                    @endforeach --}}
+                    
                   </select>
                   <div class="invalid-feedback">
                     Tolong pilih kategori {{strtolower($jenis)}}.
