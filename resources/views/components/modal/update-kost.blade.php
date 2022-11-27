@@ -17,14 +17,14 @@
                   </div>
                 </div>
                 <div class="col-12">
-                    <label for="nama" class="form-label">Alamat Kost</label>
+                    <label for="alamat" class="form-label">Alamat Kost</label>
                     <input type="text" class="form-control" id="alamat" name="alamat" value="" required>
                     <div class="invalid-feedback">
                       Tolong masukkan alamat kost.
                     </div>
                 </div>
                 <div class="col-12">
-                    <label for="nama" class="form-label">Biaya Sewa Bulanan</label>
+                    <label for="sewa" class="form-label">Biaya Sewa Bulanan</label>
                     <input type="number" class="form-control" id="sewa" name="sewa" value="" required>
                     <div class="invalid-feedback">
                       Tolong masukkan biaya sewa bulanan.
