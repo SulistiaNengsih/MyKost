@@ -35,9 +35,7 @@ class PenghuniController extends Controller
             return back()->with('statusPenghuniBerhasil', $request->nama.' berhasil ditambahkan!');
         } else {
             return back()->with('statusPenghuniGagal', $request->nama.' gagal ditambahkan! Nomor telepon tidak valid.');
-        }
-
-        
+        }   
     }
 
     public function updatePenghuni(Request $request) {
