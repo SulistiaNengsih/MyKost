@@ -55,6 +55,12 @@
       </div>
       
       <div class="table-responsive">
+        @if (session('statusBerhasil') !== null)
+        <div class="alert alert-success alert-dismissible fade show">
+          {{session('statusBerhasil')}}
+          <button type="button" class="btn-close" style="text-align: right;" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
         <table class="table table-striped table-sm">
           <thead>
             <tr>

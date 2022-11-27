@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Pembukuan;
-use Illuminate\Http\Request;
+use App\Http\Controllers\PembukuanController;
+use App\Http\Controllers\PenghuniController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,23 +25,33 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/pembukuan-pengeluaran', [Pembukuan::class, 'showPengeluaran']);
+Route::get('/pembukuan-pengeluaran', [PembukuanController::class, 'showPengeluaran']);
 
-Route::get('/pembukuan-pemasukan', [Pembukuan::class, 'showPemasukan']);
+Route::get('/pembukuan-pemasukan', [PembukuanController::class, 'showPemasukan']);
 
-Route::post('/delete-data', [Pembukuan::class, 'deleteData']);
+Route::post('/delete-data', [PembukuanController::class, 'deleteData']);
 
-Route::post('/store-data', [Pembukuan::class, 'storeData']);
+Route::post('/store-data', [PembukuanController::class, 'storeData']);
 
-Route::post('/update-data', [Pembukuan::class, 'updateData']);
+Route::post('/update-data', [PembukuanController::class, 'updateData']);
 
-Route::post('/add-kategori', [Pembukuan::class, 'addKategori']);
+Route::post('/add-kategori', [PembukuanController::class, 'addKategori']);
 
-Route::get('/kelola-kategori', [Pembukuan::class, 'kelolaKategori']);
+Route::get('/kelola-kategori', [PembukuanController::class, 'kelolaKategori']);
 
-Route::post('/delete-kategori', [Pembukuan::class, 'deleteKategori']);
+Route::post('/delete-kategori', [PembukuanController::class, 'deleteKategori']);
 
-Route::post('/update-kategori', [Pembukuan::class, 'updateKategori']);
+Route::post('/update-kategori', [PembukuanController::class, 'updateKategori']);
+
+Route::get('/penghuni', [PenghuniController::class, 'showPenghuni']);
+
+Route::post('/tambah-penghuni', [PenghuniController::class, 'tambahPenghuni']);
+
+Route::post('/update-penghuni', [PenghuniController::class, 'updatePenghuni']);
+
+Route::post('/hapus-penghuni', [PenghuniController::class, 'hapusPenghuni']);
+
+Route::post('/update-pembayaran', [PenghuniController::class, 'updateStatusPembayaran']);
 
 
 

@@ -9,7 +9,7 @@ use App\Models\KategoriPemasukan;
 use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
 
-class Pembukuan extends Controller
+class PembukuanController extends Controller
 {
     public function showPengeluaran(Request $request) {
         if (empty($request->filter)) {
@@ -89,7 +89,7 @@ class Pembukuan extends Controller
                 'nominal' => $request->nominal
             ]);
         }  
-        return back();  
+        return back()->with('statusBerhasil', 'Data '.$request->storeJenis.' berhasil ditambahkan!');  
     }
 
     public function deleteData(Request $request) {
@@ -99,7 +99,7 @@ class Pembukuan extends Controller
             Pemasukan::where('id', '=', $request->id)->delete();
         }
 
-        return back();
+        return back()->with('statusBerhasil', 'Data berhasil dihapus!');
     }
 
     public function addKategori(Request $request) {
@@ -110,7 +110,7 @@ class Pembukuan extends Controller
             $kolom => $request->namaKategori
         ]);
 
-        return back();
+        return back()->with('statusBerhasil', 'Kategori '.$request->namaKategori.' berhasil ditambahkan!');
     }
 
     public function kelolaKategori() {
@@ -127,7 +127,6 @@ class Pembukuan extends Controller
             ->update([
                 'jenis_pengeluaran' => $request->nama
             ]);
-
         } else {
             DB::table('kategori_pemasukan')
             ->where('id', $request->idUpdate)
@@ -135,17 +134,23 @@ class Pembukuan extends Controller
                 'jenis_pemasukan' => $request->nama
             ]);
         }
-        return back();
+        return back()->with('statusBerhasil', 'Kategori berhasil diupdate!');
     }
 
     public function deleteKategori(Request $request) {
         if ($request->jenis === "Pengeluaran") {
+            foreach (Pengeluaran::get() as $p) {
+                Pengeluaran::where('id_kategori_pengeluaran', '=', $request->id)->delete();
+            }
             KategoriPengeluaran::where('id', '=', $request->id)->delete();
         } else {
+            foreach (Pemasukan::get() as $p) {
+                Pemasukan::where('id_kategori_pemasukan', '=', $request->id)->delete();
+            }
             KategoriPemasukan::where('id', '=', $request->id)->delete();
         }
 
-        return back();
+        return back()->with('statusBerhasil', 'Kategori berhasil dihapus!');
     }
         
     public function updateData(Request $request) {
@@ -175,6 +180,6 @@ class Pembukuan extends Controller
                 'nominal' => $request->nominal
             ]);
         }
-        return back();
+        return back()->with('statusBerhasil', 'Data '.$request->storeJenis.' berhasil diupdate!');  
     }
 }

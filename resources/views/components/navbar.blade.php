@@ -17,25 +17,44 @@
         <div class="position-sticky pt-3 sidebar-sticky">
           <ul class="nav flex-column">
             <li class="nav-item">
+              @if ($halaman === "pembukuan")
               <a class="nav-link active" aria-current="page" href="{{url('/pembukuan-pengeluaran')}}">
-                <span data-feather="file" class="align-text-bottom"></span>
+              @else
+              <a class="nav-link" aria-current="page" href="{{url('/pembukuan-pengeluaran')}}">
+              @endif
+              <span data-feather="file" class="align-text-bottom"></span>
                 Pembukuan
               </a>
             </li>
+
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              @if ($halaman === "kost")
+              <a class="nav-link active" href="{{url('/kost')}}">
+              @else
+              <a class="nav-link" href="{{url('/kost')}}">
+              @endif
                 <span data-feather="home" class="align-text-bottom"></span>
                 Kost
               </a>
             </li>
+
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              @if ($halaman === "penghuni")
+              <a class="nav-link active" href="{{url('/penghuni')}}">
+              @else
+              <a class="nav-link" href="{{url('/penghuni')}}">
+              @endif
                 <span data-feather="users" class="align-text-bottom"></span>
                 Penghuni
               </a>
             </li>
+
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              @if($halaman === "rekapData")
+              <a class="nav-link active" href="{{url('/rekap-data')}}">
+              @else
+              <a class="nav-link" href="{{url('/rekap-data')}}">
+              @endif
                 <span data-feather="bar-chart-2" class="align-text-bottom"></span>
                 Rekap Data
               </a>
