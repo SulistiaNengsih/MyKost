@@ -3,10 +3,13 @@
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="" aria-label="Search">
+    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
     <div class="navbar-nav">
       <div class="nav-item text-nowrap">
-        <a class="nav-link px-3" href="#">Sign out</a>
+        <form method="POST" action="{{url('logout')}}">
+          @csrf
+          <button class="btn btn-sm btn-secondary" type="submit">Sign Out</button>
+        </form>
       </div>
     </div>
 </header>
@@ -34,7 +37,7 @@
               <a class="nav-link" href="{{url('/kost')}}">
               @endif
                 <span data-feather="home" class="align-text-bottom"></span>
-                Kost
+                Data Kost
               </a>
             </li>
 
@@ -45,7 +48,7 @@
               <a class="nav-link" href="{{url('/penghuni')}}">
               @endif
                 <span data-feather="users" class="align-text-bottom"></span>
-                Penghuni
+                Penghuni dan Pembayaran
               </a>
             </li>
 
@@ -57,6 +60,17 @@
               @endif
                 <span data-feather="bar-chart-2" class="align-text-bottom"></span>
                 Rekap Data
+              </a>
+            </li>
+
+            <li class="nav-item">
+              @if($halaman === "profilPemilik")
+              <a class="nav-link active" href="{{url('/profile')}}">
+              @else
+              <a class="nav-link" href="{{url('/profile')}}">
+              @endif
+                <span data-feather="user" class="align-text-bottom"></span>
+                Profil Pemilik
               </a>
             </li>
           </ul>

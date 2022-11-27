@@ -17,10 +17,6 @@ use App\Http\Controllers\KostController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -31,36 +27,42 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/pembukuan-pengeluaran', [PembukuanController::class, 'showPengeluaran']);
+Route::get('/', [PembukuanController::class, 'showPengeluaran'])->middleware('auth');
 
-Route::get('/pembukuan-pemasukan', [PembukuanController::class, 'showPemasukan']);
+Route::get('/pembukuan-pengeluaran', [PembukuanController::class, 'showPengeluaran'])->middleware('auth');
 
-Route::post('/delete-data', [PembukuanController::class, 'deleteData']);
+Route::get('/pembukuan-pemasukan', [PembukuanController::class, 'showPemasukan'])->middleware('auth');
 
-Route::post('/store-data', [PembukuanController::class, 'storeData']);
+Route::post('/delete-data', [PembukuanController::class, 'deleteData'])->middleware('auth');
 
-Route::post('/update-data', [PembukuanController::class, 'updateData']);
+Route::post('/store-data', [PembukuanController::class, 'storeData'])->middleware('auth');
 
-Route::post('/add-kategori', [PembukuanController::class, 'addKategori']);
+Route::post('/update-data', [PembukuanController::class, 'updateData'])->middleware('auth');
 
-Route::get('/kelola-kategori', [PembukuanController::class, 'kelolaKategori']);
+Route::post('/add-kategori', [PembukuanController::class, 'addKategori'])->middleware('auth');
 
-Route::post('/delete-kategori', [PembukuanController::class, 'deleteKategori']);
+Route::get('/kelola-kategori', [PembukuanController::class, 'kelolaKategori'])->middleware('auth');
 
-Route::post('/update-kategori', [PembukuanController::class, 'updateKategori']);
+Route::post('/delete-kategori', [PembukuanController::class, 'deleteKategori'])->middleware('auth');
 
-Route::get('/penghuni', [PenghuniController::class, 'showPenghuni']);
+Route::post('/update-kategori', [PembukuanController::class, 'updateKategori'])->middleware('auth');
 
-Route::post('/tambah-penghuni', [PenghuniController::class, 'tambahPenghuni']);
+Route::get('/penghuni', [PenghuniController::class, 'showPenghuni'])->middleware('auth');
 
-Route::post('/update-penghuni', [PenghuniController::class, 'updatePenghuni']);
+Route::post('/tambah-penghuni', [PenghuniController::class, 'tambahPenghuni'])->middleware('auth');
 
-Route::post('/hapus-penghuni', [PenghuniController::class, 'hapusPenghuni']);
+Route::post('/update-penghuni', [PenghuniController::class, 'updatePenghuni'])->middleware('auth');
 
-Route::post('/update-pembayaran', [PenghuniController::class, 'updateStatusPembayaran']);
+Route::post('/hapus-penghuni', [PenghuniController::class, 'hapusPenghuni'])->middleware('auth');
 
-Route::get('/kost', [KostController::class, 'showKost']);
+Route::post('/update-pembayaran', [PenghuniController::class, 'updateStatusPembayaran'])->middleware('auth');
 
-Route::post('/update-kost', [KostController::class, 'updateKost']);
+Route::get('/kost', [KostController::class, 'showKost'])->middleware('auth');
+
+Route::post('/update-kost', [KostController::class, 'updateKost'])->middleware('auth');
+
+Route::get('/profile-pemilik', function() {
+    return view ('profilePemilik');
+})->middleware('auth');
 
 require __DIR__.'/auth.php';
