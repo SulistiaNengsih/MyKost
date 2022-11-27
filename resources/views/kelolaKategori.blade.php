@@ -27,7 +27,7 @@
               {{session('statusBerhasil')}}
               <button type="button" class="btn-close" style="text-align: right;" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-          @endif
+    @endif
     <h4 class="h4">Kategori Pengeluaran</h4>
     <hr>
     <div class="table-responsive">

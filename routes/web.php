@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PembukuanController;
 use App\Http\Controllers\PenghuniController;
+use App\Http\Controllers\KostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,10 @@ Route::post('/update-penghuni', [PenghuniController::class, 'updatePenghuni']);
 Route::post('/hapus-penghuni', [PenghuniController::class, 'hapusPenghuni']);
 
 Route::post('/update-pembayaran', [PenghuniController::class, 'updateStatusPembayaran']);
+
+Route::get('/kost', [KostController::class, 'showKost']);
+
+Route::post('/update-kost', [KostController::class, 'updateKost']);
 
 
 

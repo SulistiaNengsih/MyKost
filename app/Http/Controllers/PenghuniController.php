@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Penghuni;
-use App\Models\Pemasukan;
 use App\Models\StatusPembayaran;
 use Illuminate\Support\Facades\DB;
 
 class PenghuniController extends Controller
 {
-    public function showPenghuni(Request $request) {
+    public function showPenghuni() {
         return view ('penghuni', [
             'penghuni' => Penghuni::get(),
             'statusPembayaran' => StatusPembayaran::get()
