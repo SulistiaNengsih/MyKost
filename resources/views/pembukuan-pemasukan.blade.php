@@ -37,8 +37,6 @@
         </div>
       </div>
 
-      <canvas class="my-4 w-100 col" id="myChart" width="900" height="380"></canvas>
-
       <div class="table-responsive">
         <table class="table table-sm">
           <tr>

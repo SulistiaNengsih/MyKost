@@ -61,6 +61,9 @@ Route::get('/kost', [KostController::class, 'showKost'])->middleware('auth');
 
 Route::post('/update-kost', [KostController::class, 'updateKost'])->middleware('auth');
 
+Route::get('/rekap-data', function() {
+    return view('rekapData');})->middleware('auth');
+
 Route::get('/profile-pemilik', function() {
     return view ('profilePemilik');
 })->middleware('auth');
