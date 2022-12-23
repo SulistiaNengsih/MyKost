@@ -59,6 +59,17 @@
           <button type="button" class="btn-close" style="text-align: right;" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
+
+        @if ($errors->any())
+          <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+          </div>
+        @endif
+        
         <table class="table table-striped table-sm">
           <thead>
             <tr>
@@ -88,7 +99,7 @@
                 <td scope="col">{{$p->tanggal}}</td>
                 <td scope="col">{{formatRupiah($p->nominal)}}</td>
                 <td scope="col">
-                  <a type="button" data-bs-toggle="modal" data-bs-target="#edit" idEdit="{{$p->id}}" nominal="{{$p->nominal}}" tanggal="{{$p->tanggal}}" ket="{{$p->ket_pengeluaran}}" idKategori="{{$p->id_kategori_pengeluaran}}" kategori="{{$p->jenis_pengeluaran}}"  id="editBtn">
+                  <a type="button" data-bs-toggle="modal" data-bs-target="#edit" idEdit="{{$p->id}}" foto="{{$p->foto}}" nominal="{{$p->nominal}}" tanggal="{{$p->tanggal}}" ket="{{$p->ket_pengeluaran}}" idKategori="{{$p->id_kategori_pengeluaran}}" kategori="{{$p->jenis_pengeluaran}}"  id="editBtn">
                     <i data-feather="edit" class="text-primary"></i>
                   </a>
                 </td>
@@ -112,7 +123,7 @@
 
 <x-modal.tambah jenis="Pengeluaran" />
 <x-modal.hapus jenis="pengeluaran" url="/delete-data" />
-<x-modal.update jenis="Pengeluaran" : kategori="{{DB::table('kategori_pengeluaran')->get()}}" />
+<x-modal.update jenis="Pengeluaran" />
 <x-modal.tambah-kategori />
 
 <script>
@@ -139,18 +150,30 @@
   const ket = buttonEdit.getAttribute('ket')
   const tanggal = buttonEdit.getAttribute('tanggal')
   const nominal = buttonEdit.getAttribute('nominal')
+  const foto = buttonEdit.getAttribute('foto')
 
   const modalId = editModal.querySelector('.idUpdate')
   const modalJenis = editModal.querySelector('#jenis')
   const modalKet = editModal.querySelector('#keterangan')
   const modalTgl = editModal.querySelector('#tanggal')
   const modalNom = editModal.querySelector('#nominal')
+  const modalFoto = editModal.querySelector('#img')
+  const modalFotoLabel = editModal.querySelector('#img-label')
 
   modalId.value = idEdit
   modalJenis.value = idKategori+'-'+kategori
   modalKet.value = ket
   modalTgl.value = tanggal
   modalNom.value = nominal
+
+  if (foto != "") {
+    modalFoto.style = ""
+    modalFotoLabel.style = ""
+    modalFoto.src = "storage/"+foto
+  } else {
+    modalFoto.style = "display:none;"
+    modalFotoLabel.style = "display:none"
+  }
   })
 </script>
 

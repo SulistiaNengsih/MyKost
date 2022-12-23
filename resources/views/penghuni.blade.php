@@ -2,7 +2,35 @@
 <body>
     <x-navbar halaman="penghuni"/>
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+      <div class="d-flex justify-content-between flex-wrap border-bottom flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+        <h2 class="h2">Data Kost</h2>
+      </div>
+
+      @php
+          function formatRupiah($angka) {
+            $hasil = "Rp " . number_format($angka,2,',','.');
+            return $hasil;
+          }
+      @endphp
+
+      @if (session('statusBerhasil') !== null)
+        <div class="alert alert-success alert-dismissible fade show">
+          {{session('statusBerhasil')}}
+          <button type="button" class="btn-close" style="text-align: right;" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      @endif
+
+      <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">{{$kost->nama}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Biaya sewa bulanan {{formatRupiah($kost->biaya_sewa_bulanan)}}</h6>
+            <p class="card-text">{{$kost->alamat}}</p>
+            <p class="card-text"><small class="text-muted">Jumlah penghuni: {{$penghuni->count()}}</small></p>
+          </div>
+      </div>
+      <a type="button" idKost="{{$kost->id}}" namaKost="{{$kost->nama}}" alamatKost="{{$kost->alamat}}" biayaKost="{{$kost->biaya_sewa_bulanan}}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editKost" style="float: right;">Edit Data Kost</a>
+        
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
           <div class="table-responsive">
             <table class="table table-sm">
               <tr>
@@ -50,7 +78,8 @@
               @php
                 $nomor = 1;
               @endphp
-              @foreach ($penghuni as $p)
+              @if ($penghuni->count() > 0)
+                @foreach ($penghuni as $p)
                 <tr>
                     <td>{{$nomor}}</td>
                     <td>{{$p->nama}}</td>
@@ -71,7 +100,10 @@
                 @php
                   $nomor++;
                 @endphp   
-              @endforeach 
+                @endforeach 
+              @else
+                <h6 class="h6">Anda belum memiliki penghuni kost</h6>
+              @endif
             </tbody>
           </table>
         </div>
@@ -112,90 +144,105 @@
                   $nomor = 1;
                   $bulan = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
                 @endphp
-                @foreach ($statusPembayaran as $sp)
-                <form action="{{url('/update-pembayaran')}}" method="post">
-                  @csrf
-                  <tr> 
-                    @if ($penghuni->find($sp->id_penghuni)->status === 'Terdaftar')
-                    <td>{{$nomor}}</td>
-                    <td>{{$penghuni->find($sp->id_penghuni)->nama}}</td>
-                    @foreach($bulan as $b)
-                      @if (isset($sp->$b) && $sp->$b === 1)
-                      <td>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="1" id="{{$b}}" name="{{$b}}" checked>
-                        </div>
-                      </td>
-                      @else
-                      <td>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="1" name="{{$b}}" id="{{$b}}">
-                        </div>
-                      </td>
-                      @endif
-                    @endforeach
-                      <td>
-                        <input type="hidden" id="id" name="id" value="{{$sp->id_penghuni}}"> 
-                        <input type="hidden" id="nama" name="nama" value="{{$penghuni->find($sp->id_penghuni)->nama}}"> 
-                        <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                      </td>
-                  </tr> 
-                </form>
-                @php  
-                  $nomor++;
-                @endphp
-                    @endif   
-                @endforeach   
+                @if ($penghuni->count() > 0)
+                  @foreach ($statusPembayaran as $sp)
+                  <form action="{{url('/update-pembayaran')}}" method="post">
+                    @csrf
+                    <tr> 
+                      @if ($penghuni->find($sp->id_penghuni)->status === 'Terdaftar')
+                      <td>{{$nomor}}</td>
+                      <td>{{$penghuni->find($sp->id_penghuni)->nama}}</td>
+                      @foreach($bulan as $b)
+                        @if (isset($sp->$b) && $sp->$b === 1)
+                        <td>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="1" id="{{$b}}" name="{{$b}}" checked>
+                          </div>
+                        </td>
+                        @else
+                        <td>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="1" name="{{$b}}" id="{{$b}}">
+                          </div>
+                        </td>
+                        @endif
+                      @endforeach
+                        <td>
+                          <input type="hidden" id="id" name="id" value="{{$sp->id_penghuni}}"> 
+                          <input type="hidden" id="nama" name="nama" value="{{$penghuni->find($sp->id_penghuni)->nama}}"> 
+                          <button class="btn btn-sm btn-primary" type="submit">Update</button>
+                        </td>
+                    </tr> 
+                  </form>
+                  @php  
+                    $nomor++;
+                  @endphp
+                      @endif   
+                  @endforeach
+                @else
+                  <h6 class="h6">Anda belum memiliki penghuni kost</h6>
+                @endif
+                   
               </tbody>
             </table>    
+
+            <x-modal.update-kost />
+            <x-modal.tambah-penghuni/>
+            <x-modal.update-penghuni/>
+            <x-modal.hapus-penghuni/>
           </div>
-
-          <x-modal.tambah-penghuni/>
-          <x-modal.update-penghuni/>
-          <x-modal.hapus-penghuni/>
-
-          
-
+  
           <script>
               // Modal Update Data
               const editModal = document.getElementById('updatePenghuni')
               editModal.addEventListener('show.bs.modal', event => {
 
-              const buttonEdit = event.relatedTarget
-              const idEdit = buttonEdit.getAttribute('idEdit')
-              const nama = buttonEdit.getAttribute('nama')
-              const no_telepon = buttonEdit.getAttribute('no_telepon')
-              const no_kamar = buttonEdit.getAttribute('no_kamar')
-              const status = buttonEdit.getAttribute('status')
+                const buttonEdit = event.relatedTarget
+                const idEdit = buttonEdit.getAttribute('idEdit')
+                const nama = buttonEdit.getAttribute('nama')
+                const no_telepon = buttonEdit.getAttribute('no_telepon')
+                const no_kamar = buttonEdit.getAttribute('no_kamar')
+                const status = buttonEdit.getAttribute('status')
 
-              const modalId = editModal.querySelector('#id')
-              const modalNama = editModal.querySelector('#nama')
-              const modalNo_telepon = editModal.querySelector('#no_telepon')
-              const modalNo_kamar = editModal.querySelector('#no_kamar')
-              const modalStatus = editModal.querySelector('#status')
+                const modalId = editModal.querySelector('#id')
+                const modalNama = editModal.querySelector('#nama')
+                const modalNo_telepon = editModal.querySelector('#no_telepon')
+                const modalNo_kamar = editModal.querySelector('#no_kamar')
+                const modalStatus = editModal.querySelector('#status')
 
-              modalId.value = idEdit
-              modalNama.value = nama
-              modalNo_telepon.value = no_telepon
-              modalNo_kamar.value = no_kamar
-              modalStatus.value = status
+                modalId.value = idEdit
+                modalNama.value = nama
+                modalNo_telepon.value = no_telepon
+                modalNo_kamar.value = no_kamar
+                modalStatus.value = status
               })
+
+              // Modal Update Kost
+              const updateKostModal = document.getElementById('editKost')
+              updateKostModal.addEventListener('show.bs.modal', event => {
+
+                const updateKostId = updateKostModal.querySelector('#id')
+                const updateNamaKost = updateKostModal.querySelector('#nama')
+                
+                updateKostId.value = {{$kost->id}}
+              })
+              
 
               // Modal Hapus Data
               const hapusModal = document.getElementById('hapusPenghuni')
               hapusModal.addEventListener('show.bs.modal', event => {
 
-              const buttonHapus = event.relatedTarget
-              const idHapus = buttonHapus.getAttribute('idHapus')
-              const namaHapus = buttonHapus.getAttribute('nama')
+                const buttonHapus = event.relatedTarget
+                const idHapus = buttonHapus.getAttribute('idHapus')
+                const namaHapus = buttonHapus.getAttribute('nama')
 
-              const modalHapusId = hapusModal.querySelector('.id')
-              const modalBody = hapusModal.querySelector('.modal-body')
-              const modalNamaHapus = hapusModal.querySelector('.nama')
+                const modalHapusId = hapusModal.querySelector('.id')
+                const modalBody = hapusModal.querySelector('.modal-body')
+                const modalNamaHapus = hapusModal.querySelector('.nama')
 
-              modalBody.innerText = "Apakah anda yakin akan menghapus penghuni dengan nama " + namaHapus + "? " + " Seluruh data yang berkaitan dengan penghuni ini juga akan terhapus."
-              modalHapusId.value = idHapus 
-              modalNamaHapus.value = namaHapus
+                modalBody.innerText = "Apakah anda yakin akan menghapus penghuni dengan nama " + namaHapus + "? " + " Seluruh data yang berkaitan dengan penghuni ini juga akan terhapus."
+                modalHapusId.value = idHapus 
+                modalNamaHapus.value = namaHapus
               })
           </script>
 

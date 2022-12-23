@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\KategoriPengeluaran;
 use App\Models\KategoriPemasukan;
 use App\Models\Pemasukan;
@@ -12,16 +13,19 @@ use App\Models\Pengeluaran;
 class PembukuanController extends Controller
 {
     public function showPengeluaran(Request $request) {
+        $id_user = Auth::user()->id;
         if (empty($request->filter)) {
             return view('pembukuan-pengeluaran', [
                 'pengeluaran' => Pengeluaran::join('kategori_pengeluaran', 'pengeluaran.id_kategori_pengeluaran', '=', 'kategori_pengeluaran.id')
                 ->select('pengeluaran.*', 'kategori_pengeluaran.jenis_pengeluaran')
+                ->where('kategori_pengeluaran.id_user', '=', $id_user)
                 ->get(),
     
-                'filter' => $request->filter
+                'filter' => $request->filter,
+                'id_user' => $id_user
             ],
             [
-                'kategoriPengeluaran' => KategoriPengeluaran::get()
+                'kategoriPengeluaran' => KategoriPengeluaran::get()->where('id_user', '=', $id_user)
             ]
             );
         } else {
@@ -31,26 +35,30 @@ class PembukuanController extends Controller
                 ->where('jenis_pengeluaran', '=', $request->filter)
                 ->get(),
     
-                'filter' => $request->filter
+                'filter' => $request->filter,
+                'id_user' => $id_user
             ],
             [
-                'kategoriPengeluaran' => KategoriPengeluaran::get()
+                'kategoriPengeluaran' => KategoriPengeluaran::get()->where('id_user', '=', $id_user)
             ]
             );
         }     
     }
 
     public function showPemasukan(Request $request) {
+        $id_user = Auth::user()->id;
         if (empty($request->filter)) {
             return view('pembukuan-pemasukan', [
                 'pemasukan' => Pemasukan::join('kategori_pemasukan', 'pemasukan.id_kategori_pemasukan', '=', 'kategori_pemasukan.id')
                             ->select('pemasukan.*', 'kategori_pemasukan.jenis_pemasukan')
+                            ->where('kategori_pemasukan.id_user', '=', $id_user)
                             ->get(),
                             
-                'filter' => $request->filter
+                'filter' => $request->filter,
+                'id_user' => $id_user
             ],
             [
-                'kategoriPemasukan' => KategoriPemasukan::get()
+                'kategoriPemasukan' => KategoriPemasukan::get()->where('id_user', '=', $id_user)
             ]
             );
         } else {
@@ -60,33 +68,49 @@ class PembukuanController extends Controller
                             ->where('jenis_pemasukan', '=', $request->filter)
                             ->get(),
                             
-                'filter' => $request->filter
+                'filter' => $request->filter,
+                'id_user' => $id_user
             ],
             [
-                'kategoriPemasukan' => KategoriPemasukan::get()
+                'kategoriPemasukan' => KategoriPemasukan::get()->where('id_user', '=', $id_user)
             ]
             );
         } 
     }
 
     public function storeData(Request $request) {
+        $validated = $request->validate([
+            'jenis' => 'required',
+            'keterangan' => 'required',
+            'tanggal' => 'required',
+            'nominal' => 'required',
+            'foto' => 'bail|mimes:jpg,png,jpeg|image|max:2048'
+        ]);
+
         $pos = strpos($request->jenis, '-');
         $kategori = substr($request->jenis, 0, $pos);
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('uploads');
+        } else {
+            $path = '';
+        }
 
         if ($request->storeJenis === 'pengeluaran') {
             Pengeluaran::insert([
                 'id_kategori_pengeluaran' => $kategori,
                 'ket_pengeluaran' => $request->keterangan,
                 'tanggal' => $request->tanggal,
-                'nominal' => $request->nominal
+                'nominal' => $request->nominal,
+                'foto' => $path
             ]);
-            
         } else {
             Pemasukan::insert([
                 'id_kategori_pemasukan' => $kategori,
                 'ket_pemasukan' => $request->keterangan,
                 'tanggal' => $request->tanggal,
-                'nominal' => $request->nominal
+                'nominal' => $request->nominal,
+                'foto' => $path
             ]);
         }  
         return back()->with('statusBerhasil', 'Data '.$request->storeJenis.' berhasil ditambahkan!');  
@@ -105,18 +129,21 @@ class PembukuanController extends Controller
     public function addKategori(Request $request) {
         $tabel = 'kategori_'.$request->jenis;
         $kolom = 'jenis_'.$request->jenis;
+        $id_user = Auth::user()->id;
 
         DB::table($tabel)->insert([
-            $kolom => $request->namaKategori
+            $kolom => $request->namaKategori,
+            'id_user' => $id_user
         ]);
 
         return back()->with('statusBerhasil', 'Kategori '.$request->namaKategori.' berhasil ditambahkan!');
     }
 
     public function kelolaKategori() {
+        $id_user = Auth::user()->id;
         return view('kelolaKategori', [
-            'kategoriPengeluaran' => KategoriPengeluaran::get(),
-            'kategoriPemasukan' => KategoriPemasukan::get()
+            'kategoriPengeluaran' => KategoriPengeluaran::get()->where('id_user', '=', $id_user),
+            'kategoriPemasukan' => KategoriPemasukan::get()->where('id_user', '=', $id_user)
         ]);
     }
 
@@ -154,6 +181,20 @@ class PembukuanController extends Controller
     }
         
     public function updateData(Request $request) {
+        $validated = $request->validate([
+            'jenis' => 'required',
+            'keterangan' => 'required',
+            'tanggal' => 'required',
+            'nominal' => 'required',
+            'foto' => 'bail|mimes:jpg,png,jpeg|image|max:2048'
+        ]);
+        
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('uploads');
+        } else {
+            $path = '';
+        }
+
         if ($request->jenisUpdate === 'Pengeluaran') {
             $pos = strpos($request->jenis, '-');
             $kategori = substr($request->jenis, 0, $pos);
@@ -164,7 +205,8 @@ class PembukuanController extends Controller
                 'id_kategori_pengeluaran' => $kategori,
                 'ket_pengeluaran' => $request->keterangan,
                 'tanggal' => $request->tanggal,
-                'nominal' => $request->nominal
+                'nominal' => $request->nominal,
+                'foto' => $path
             ]);
 
         } else {
@@ -177,7 +219,8 @@ class PembukuanController extends Controller
                 'id_kategori_pemasukan' => $kategori,
                 'ket_pemasukan' => $request->keterangan,
                 'tanggal' => $request->tanggal,
-                'nominal' => $request->nominal
+                'nominal' => $request->nominal,
+                'foto' => $path
             ]);
         }
         return back()->with('statusBerhasil', 'Data '.$request->storeJenis.' berhasil diupdate!');  

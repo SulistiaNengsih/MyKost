@@ -33,7 +33,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-            <input type="hidden" id="id" name="id" class="id" value="1">
+            <input type="hidden" id="id" name="id" class="id" value="">
             <button type="submit" class="btn btn-primary">Edit Data Kost</button>
           </div>
         </form>

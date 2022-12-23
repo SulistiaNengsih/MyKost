@@ -2,20 +2,22 @@
 @php
   use App\Models\KategoriPengeluaran;
   use App\Models\KategoriPemasukan;
+  use Illuminate\Support\Facades\Auth;
 
   $kategori;
+  $id_user = Auth::user()->id;
 
   if ($jenis === 'Pengeluaran') {
-    $kategori = KategoriPengeluaran::get();
+    $kategori = KategoriPengeluaran::get()->where('id_user', '=', $id_user);
   } else {
-    $kategori = KategoriPemasukan::get();
+    $kategori = KategoriPemasukan::get()->where('id_user', '=', $id_user);
   }
 @endphp
 
 <div class="modal fade" id="tambah" tabindex="-1" aria-labelledby="tambahLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="/store-data" method="post">
+      <form action="/store-data" method="post" enctype="multipart/form-data">
         @csrf
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="tambahLabel">Tambah {{$jenis}}</h1>
@@ -62,6 +64,13 @@
             <input type="number" class="form-control" id="nominal" name="nominal" placeholder="32000" required>
             <div class="invalid-feedback">
               Tolong masukkan nominal {{strtolower($jenis)}}.
+            </div>
+          </div>
+          <div class="col-12">
+            <label for="foto" class="form-label">Upload Bukti {{$jenis}}</label>
+            <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+            <div class="invalid-feedback">
+              Hanya menerima input file berupa gambar.
             </div>
           </div>
         </div>

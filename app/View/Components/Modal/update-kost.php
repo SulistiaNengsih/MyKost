@@ -11,6 +11,7 @@ class update-kost extends Component
      *
      * @return void
      */
+
     public function __construct()
     {
         //

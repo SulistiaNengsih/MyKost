@@ -4,25 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Penghuni;
+use App\Models\Kost;
 use App\Models\StatusPembayaran;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PenghuniController extends Controller
 {
     public function showPenghuni() {
-        return view ('penghuni', [
-            'penghuni' => Penghuni::get(),
-            'statusPembayaran' => StatusPembayaran::get()
-        ]);
+        $id_user = Auth::user()->id;
+        $kost = Kost::get()->where('id_user', '=', $id_user)->first();
+        $penghuni = Penghuni::where('id_kost', '=', $kost->id)->get();
+
+        if (DB::table('kost')->where('id_user', '=', $id_user)->count() > 0) {
+            return view ('penghuni', [
+                'penghuni' => $penghuni,
+                'statusPembayaran' => StatusPembayaran::get(),
+                'kost' => $kost,
+                'id_kost' => $kost->id
+            ]);
+        } else {
+            return view ('tambah-kost');
+        }
     }
 
     public function tambahPenghuni( Request $request) {
+        $id_user = Auth::user()->id;
+        $kost = DB::table('kost')->where('id_user', '=', $id_user)->first();
         if (is_numeric($request->no_telepon) && strlen($request->no_telepon) >= 10) {
             Penghuni::insert([
                 'nama' => $request->nama,
                 'no_telepon' => $request->no_telepon,
                 'status' => $request->status,
-                'no_kamar' => $request->no_kamar
+                'no_kamar' => $request->no_kamar,
+                'id_kost' => $kost->id
             ]);
     
             foreach (Penghuni::get() as $p) {

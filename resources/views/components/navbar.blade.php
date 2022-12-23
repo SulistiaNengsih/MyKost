@@ -31,24 +31,13 @@
             </li>
 
             <li class="nav-item">
-              @if ($halaman === "kost")
-              <a class="nav-link active" href="{{url('/kost')}}">
-              @else
-              <a class="nav-link" href="{{url('/kost')}}">
-              @endif
-                <span data-feather="home" class="align-text-bottom"></span>
-                Data Kost
-              </a>
-            </li>
-
-            <li class="nav-item">
               @if ($halaman === "penghuni")
               <a class="nav-link active" href="{{url('/penghuni')}}">
               @else
               <a class="nav-link" href="{{url('/penghuni')}}">
               @endif
                 <span data-feather="users" class="align-text-bottom"></span>
-                Penghuni dan Pembayaran
+                Kost dan Penghuni
               </a>
             </li>
 

@@ -21,11 +21,10 @@
         @endif
 
         <div class="card mb-3">
-            <img src="{{asset('kost.jpg')}}" class="card-img-top" style="max-height: 700px;" alt="fotoKost">
             <div class="card-body">
-              <h5 class="card-title">{{$kost->find(1)->nama}}</h5>
+              <h5 class="card-title">{{$kost->nama}}</h5>
               <h6 class="card-subtitle mb-2 text-muted">Biaya sewa bulanan {{formatRupiah($kost->find(1)->biaya_sewa_bulanan)}}</h6>
-              <p class="card-text">{{$kost->find(1)->alamat}}</p>
+              <p class="card-text">{{$kost->alamat}}</p>
               <p class="card-text"><small class="text-muted">Jumlah penghuni: {{$penghuni->count()}}</small></p>
             </div>
         </div>

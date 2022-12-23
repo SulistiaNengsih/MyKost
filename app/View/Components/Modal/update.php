@@ -7,16 +7,14 @@ use Illuminate\View\Component;
 class update extends Component
 {
     public $jenis;
-    public $kategori;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($jenis, $kategori)
+    public function __construct($jenis)
     {
         $this->jenis = $jenis;
-        $this->kategori = $kategori;
     }
 
     /**

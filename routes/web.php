@@ -57,9 +57,11 @@ Route::post('/hapus-penghuni', [PenghuniController::class, 'hapusPenghuni'])->mi
 
 Route::post('/update-pembayaran', [PenghuniController::class, 'updateStatusPembayaran'])->middleware('auth');
 
-Route::get('/kost', [KostController::class, 'showKost'])->middleware('auth');
+// Route::get('/kost', [KostController::class, 'showKost'])->middleware('auth');
 
 Route::post('/update-kost', [KostController::class, 'updateKost'])->middleware('auth');
+
+Route::post('/tambah-kost', [KostController::class, 'tambahKost'])->middleware('auth');
 
 Route::get('/rekap-data', function() {
     return view('rekapData');})->middleware('auth');
