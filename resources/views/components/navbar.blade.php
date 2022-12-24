@@ -42,17 +42,6 @@
             </li>
 
             <li class="nav-item">
-              @if($halaman === "rekapData")
-              <a class="nav-link active" href="{{url('/rekap-data')}}">
-              @else
-              <a class="nav-link" href="{{url('/rekap-data')}}">
-              @endif
-                <span data-feather="bar-chart-2" class="align-text-bottom"></span>
-                Rekap Data
-              </a>
-            </li>
-
-            <li class="nav-item">
               @if($halaman === "profilPemilik")
               <a class="nav-link active" href="{{url('/profile')}}">
               @else

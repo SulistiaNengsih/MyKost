@@ -10,19 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class KostController extends Controller
 {
-    // public function showKost() {
-    //     $id_user = Auth::user()->id;
-
-    //     if (Kost::where('id_user', '=', $id_user)->count() > 0) {
-    //         return view ('kost', [
-    //             'kost' => Kost::get()->where('id_user', '=', $id_user)->limit(1),
-    //             'penghuni' => Penghuni::get()
-    //         ]);
-    //     } else {
-    //         return view ('tambah-kost');
-    //     }
-        
-    // }
 
     public function updateKost(Request $request) {
         DB::table('kost')->where('id', $request->id)->update(

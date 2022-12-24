@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PembukuanController;
 use App\Http\Controllers\PenghuniController;
 use App\Http\Controllers\KostController;
+use App\Http\Controllers\RekapDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,16 +56,16 @@ Route::post('/update-penghuni', [PenghuniController::class, 'updatePenghuni'])->
 
 Route::post('/hapus-penghuni', [PenghuniController::class, 'hapusPenghuni'])->middleware('auth');
 
-Route::post('/update-pembayaran', [PenghuniController::class, 'updateStatusPembayaran'])->middleware('auth');
+Route::post('/tambah-riwayat-bayar', [PenghuniController::class, 'tambahRiwayatBayar'])->middleware('auth');
 
+Route::post('/hapus-riwayat-bayar', [PenghuniController::class, 'hapusRiwayatBayar'])->middleware('auth');
+
+Route::post('/update-riwayat-bayar', [PenghuniController::class, 'updateRiwayatBayar'])->middleware('auth');
 // Route::get('/kost', [KostController::class, 'showKost'])->middleware('auth');
 
 Route::post('/update-kost', [KostController::class, 'updateKost'])->middleware('auth');
 
 Route::post('/tambah-kost', [KostController::class, 'tambahKost'])->middleware('auth');
-
-Route::get('/rekap-data', function() {
-    return view('rekapData');})->middleware('auth');
 
 Route::get('/profile-pemilik', function() {
     return view ('profilePemilik');
