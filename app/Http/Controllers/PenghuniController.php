@@ -44,13 +44,6 @@ class PenghuniController extends Controller
                 'id_kost' => $kost->id
             ]);
     
-            foreach (Penghuni::get() as $p) {
-                StatusPembayaran::updateOrInsert(
-                    ['id_penghuni' => $p->id],
-                    ['id_tahun' => 1]
-                );
-            }
-    
             return back()->with('statusPenghuniBerhasil', $request->nama.' berhasil ditambahkan!');
         } else {
             return back()->with('statusPenghuniGagal', $request->nama.' gagal ditambahkan! Nomor telepon tidak valid.');
