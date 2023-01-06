@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Kost;
-use App\Models\Penghuni;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Http\Requests\KostRequest;
 use Illuminate\Support\Facades\Auth;
 
 class KostController extends Controller
 {
-
-    public function updateKost(Request $request) {
-        DB::table('kost')->where('id', $request->id)->update(
+    public function updateKost(KostRequest $request) {
+        $validate = $request->validated();
+        Kost::where('id', $request->id)->update(
             [
                 'nama' => $request->nama,
                 'alamat' => $request->alamat,
@@ -23,14 +22,21 @@ class KostController extends Controller
     }
 
     public function tambahKost(Request $request) {
-        $id_user = Auth::user()->id;
-        DB::table('kost')->insert(
+        $validate = $request->validate([
+            'nama' => 'required|max:225',
+            'alamat' => 'required',
+            'biaya_sewa_bulanan' => 'required|numeric'
+        ]);
+
+        Kost::insert(
             [
                 'nama' => $request->nama,
                 'alamat' => $request->alamat,
                 'biaya_sewa_bulanan' => $request->sewa,
-                'id_user' => $id_user
+                'id_user' => Auth::user()->id
             ]
         );
+
+        return back()->with('statusBerhasil', 'Data kost berhasil ditambahkan!');
     }
 }

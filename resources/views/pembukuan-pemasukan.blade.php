@@ -80,6 +80,7 @@
               <th scope="col">Nominal</th>
               <th scope="col"></th>
               <th scope="col"></th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -91,15 +92,23 @@
                 $nomor = 1;
                 $id = 0;
             @endphp
-            @foreach ($pemasukan as $p)            
+            @foreach ($pemasukan as $p)
+            @php
+                $jenis_pemasukan = $kategoriPemasukan->where('id', '=', $p->id_kategori_pemasukan)->first()->jenis_pemasukan;
+            @endphp            
             <tr>
                 <td scope="col">{{$nomor}}</td>
-                <td scope="col">{{$p->jenis_pemasukan}}</td>
+                <td scope="col">{{$jenis_pemasukan}}</td>
                 <td scope="col">{{$p->ket_pemasukan}}</td>
                 <td scope="col">{{$p->tanggal}}</td>
                 <td scope="col">{{formatRupiah($p->nominal)}}</td>
+                <td scpe="col">
+                  <a href="" class="text-primary">
+                    <i data-feather="eye" class="text-primary"></i>
+                  </a>
+                </td>
                 <td scope="col">
-                  <a type="button" data-bs-toggle="modal" data-bs-target="#edit" idEdit="{{$p->id}}" foto="{{$p->foto}}" nominal="{{$p->nominal}}" tanggal="{{$p->tanggal}}" ket="{{$p->ket_pemasukan}}" idKategori="{{$p->id_kategori_pemasukan}}" kategori="{{$p->jenis_pemasukan}}"  id="editBtn">
+                  <a type="button" data-bs-toggle="modal" data-bs-target="#edit" idEdit="{{$p->id}}" foto="{{$p->foto}}" nominal="{{$p->nominal}}" tanggal="{{$p->tanggal}}" ket="{{$p->ket_pemasukan}}" idKategori="{{$p->id_kategori_pemasukan}}" kategori="{{$jenis_pemasukan}}"  id="editBtn">
                     <i data-feather="edit" class="text-primary"></i>
                   </a>
                 </td>

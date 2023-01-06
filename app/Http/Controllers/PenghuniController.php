@@ -1,24 +1,25 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\RiwayatBayarRequest;
+use App\Http\Requests\PenghuniRequest;
 use App\Models\Penghuni;
 use App\Models\Kost;
 use App\Models\Bulan;
 use App\Models\Tahun;
 use App\Models\StatusPembayaran;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class PenghuniController extends Controller
 {
+    // PENGHUNI
     public function showPenghuni() {
         $id_user = Auth::user()->id;
         $kost = Kost::get()->where('id_user', '=', $id_user)->first();
         $penghuni = Penghuni::where('id_kost', '=', $kost->id)->get();
 
-        if (DB::table('kost')->where('id_user', '=', $id_user)->count() > 0) {
+        if (Kost::where('id_user', '=', $id_user)->count() > 0) {
             return view ('penghuni', [
                 'penghuni' => $penghuni,
                 'statusPembayaran' => StatusPembayaran::get(),
@@ -32,99 +33,92 @@ class PenghuniController extends Controller
         }
     }
 
-    public function tambahPenghuni( Request $request) {
+    public function tambahPenghuni(PenghuniRequest $request) {
+        $validated = $request->validated();
+
         $id_user = Auth::user()->id;
-        $kost = DB::table('kost')->where('id_user', '=', $id_user)->first();
-        if (is_numeric($request->no_telepon) && strlen($request->no_telepon) >= 10) {
-            Penghuni::insert([
-                'nama' => $request->nama,
-                'no_telepon' => $request->no_telepon,
-                'status' => $request->status,
-                'no_kamar' => $request->no_kamar,
-                'id_kost' => $kost->id
-            ]);
-    
-            return back()->with('statusPenghuniBerhasil', $request->nama.' berhasil ditambahkan!');
-        } else {
-            return back()->with('statusPenghuniGagal', $request->nama.' gagal ditambahkan! Nomor telepon tidak valid.');
-        }   
+        $kost = Kost::get()->where('id_user', '=', $id_user)->first();
+
+        Penghuni::insert([
+            'nama' => $request->nama,
+            'no_telepon' => $request->no_telepon,
+            'status' => $request->status,
+            'no_kamar' => $request->no_kamar,
+            'id_kost' => $kost->id
+        ]);
+
+        return back()->with('statusPenghuniBerhasil', 'Penghuni '.$request->nama.' berhasil ditambahkan!');
     }
 
-    public function updatePenghuni(Request $request) {
-        DB::table('penghuni')->where('id', $request->id)->update([
+    public function updatePenghuni(PenghuniRequest $request) {
+        $validated = $request->validated();
+
+        Penghuni::where('id', $request->id)->update([
             'nama' => $request->nama,
             'no_telepon' => $request->no_telepon,
             'status' => $request->status,
             'no_kamar' => $request->no_kamar
         ]);
 
-        return back()->with('statusPenghuniBerhasil', $request->nama.' berhasil diupdate!');
+        return back()->with('statusPenghuniBerhasil', 'Penghuni '.$request->nama.' berhasil diupdate!');
     }
 
     public function hapusPenghuni(Request $request) {
+        $validated = $request->validated([
+            'nama' => 'required|max:250',
+            'id' => 'required'
+        ]);
+
         StatusPembayaran::where('id_penghuni', $request->id)->delete();
         Penghuni::where('id', $request->id)->delete();
 
-        return back()->with('statusPenghuniBerhasil', $request->nama.' berhasil dihapus!');
+        return back()->with('statusPenghuniBerhasil', 'Penghuni '.$request->nama.' berhasil dihapus!');
     }
 
-    public function tambahRiwayatBayar(Request $request) {
-        $validated = $request->validate([
-            'idPenghuni' => 'required',
-            'idTahun' => 'required',
-            'idBulan' => 'required',
-            'tanggal' => 'required',
-            'fotoBuktiBayar' => 'bail|mimes:jpg,png,jpeg|image|max:2048'
-        ]);
-
-        if ($request->hasFile('fotoBuktiBayar')) {
-            $path = $request->file('fotoBuktiBayar')->store('uploads');
-        } else {
-            $path = '';
-        }
+    // RIWAYAT BAYAR PENGHUNI
+    public function tambahRiwayatBayar(RiwayatBayarRequest $request) {
+        $validated = $request->validated();
 
         StatusPembayaran::insert([
             'id_penghuni' => $request->idPenghuni,
             'id_tahun' => $request->idTahun,
             'id_bulan' => $request->idBulan,
             'tanggal_bayar' => $request->tanggal,
-            'foto_bukti_bayar' => $path
+            'foto_bukti_bayar' => $this->getFilePath($request)
         ]);
         
-        return back()->with('statusRiwayatBerhasil', 'riwayat pembayaran berhasil ditambahkan!');
+        return back()->with('statusRiwayatBerhasil', 'Riwayat pembayaran berhasil ditambahkan!');
     }
 
     public function hapusRiwayatBayar(Request $request) {
-        StatusPembayaran::find($request->id)->delete();
-
-        return back()->with('statusPenghuniBerhasil',' riwayat pembayaran berhasil dihapus!');
-    }
-
-    public function updateRiwayatBayar(Request $request) {
-        $validated = $request->validate([
-            'idPenghuni' => 'required',
-            'idTahun' => 'required',
-            'idBulan' => 'required',
-            'tanggal' => 'required',
-            'fotoBuktiBayar' => 'bail|mimes:jpg,png,jpeg|image|max:2048'
+        $validate = $request->validate([
+            'id' => 'required'
         ]);
 
-        if ($request->hasFile('fotoBuktiBayar')) {
-            $path = $request->file('fotoBuktiBayar')->store('uploads');
-        } else {
-            $path = '';
-        }
+        StatusPembayaran::find($request->id)->delete();
 
-        DB::table('status_pembayaran')
-        ->where('id', $request->id)
-        ->update([
+        return back()->with('statusRiwayatBerhasil', 'Riwayat pembayaran berhasil dihapus!');
+    }
+
+    public function updateRiwayatBayar(RiwayatBayarRequest $request) {
+        $validate = $request->validated();
+
+        StatusPembayaran::where('id', $request->id)->update([
             'id_penghuni' => $request->idPenghuni,
             'id_tahun' => $request->idTahun,
             'id_bulan' => $request->idBulan,
             'tanggal_bayar' => $request->tanggal,
-            'foto_bukti_bayar' => $path
+            'foto_bukti_bayar' => $this->getFilePath($request)
         ]);
         
-        return back()->with('statusRiwayatBerhasil', 'riwayat pembayaran berhasil diupdate!');
+        return back()->with('statusRiwayatBerhasil', 'Riwayat pembayaran berhasil diupdate!');
+    }
+
+    public function getFilePath($request) {
+        if ($request->hasFile('fotoBuktiBayar')) {
+            return $path = $request->file('fotoBuktiBayar')->store('uploads');
+        } else {
+            return $path = '';
+        }
     }
 }

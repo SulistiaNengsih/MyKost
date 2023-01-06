@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PembukuanController;
 use App\Http\Controllers\PenghuniController;
+use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KostController;
 use App\Http\Controllers\RekapDataController;
 
@@ -40,13 +41,13 @@ Route::post('/store-data', [PembukuanController::class, 'storeData'])->middlewar
 
 Route::post('/update-data', [PembukuanController::class, 'updateData'])->middleware('auth');
 
-Route::post('/add-kategori', [PembukuanController::class, 'addKategori'])->middleware('auth');
+Route::post('/add-kategori', [KategoriController::class, 'addKategori'])->middleware('auth');
 
-Route::get('/kelola-kategori', [PembukuanController::class, 'kelolaKategori'])->middleware('auth');
+Route::get('/kelola-kategori', [KategoriController::class, 'kelolaKategori'])->middleware('auth');
 
-Route::post('/delete-kategori', [PembukuanController::class, 'deleteKategori'])->middleware('auth');
+Route::post('/delete-kategori', [KategoriController::class, 'deleteKategori'])->middleware('auth');
 
-Route::post('/update-kategori', [PembukuanController::class, 'updateKategori'])->middleware('auth');
+Route::post('/update-kategori', [KategoriController::class, 'updateKategori'])->middleware('auth');
 
 Route::get('/penghuni', [PenghuniController::class, 'showPenghuni'])->middleware('auth');
 
@@ -61,7 +62,6 @@ Route::post('/tambah-riwayat-bayar', [PenghuniController::class, 'tambahRiwayatB
 Route::post('/hapus-riwayat-bayar', [PenghuniController::class, 'hapusRiwayatBayar'])->middleware('auth');
 
 Route::post('/update-riwayat-bayar', [PenghuniController::class, 'updateRiwayatBayar'])->middleware('auth');
-// Route::get('/kost', [KostController::class, 'showKost'])->middleware('auth');
 
 Route::post('/update-kost', [KostController::class, 'updateKost'])->middleware('auth');
 
